@@ -19,7 +19,7 @@ else:
 # Streamlit app
 st.title("CRUD Operations with MySQL")
 # CRUD Operations
-option = st.sidebar.selectbox("Select an operation", ("Create","Read","Update","Delete"))
+option = st.sidebar.selectbox("Select an operation", ("Create Table","Delete Table","Create","Read","Update","Delete"))
 
 if option == "Create":
     st.subheader("Create a Record:")
@@ -82,6 +82,22 @@ elif option == "Delete":
         curs.execute(delete_query, val)
         db.commit()
         st.success("Record deleted!")
+
+elif option == "Create Table":
+    st.subheader("Create a table:")
+    if st.button("Create"):
+        create_query = "create table users (    id int auto_increment,     name varchar(50),       email varchar(50),      primary key(id))"
+        curs.execute(create_query)
+        db.commit()
+        st.success("Table created!!")
+
+elif option == "Delete Table":
+    st.subheader("Delete existing table:")
+    if st.button("Delete"):
+        drop_query = "drop table users"
+        curs.execute(drop_query)
+        db.commit()
+        st.success("Table deleted!!")
 
 curs.close()
 db.close()
