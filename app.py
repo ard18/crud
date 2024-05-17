@@ -17,9 +17,9 @@ else:
     print("Connection Failed")
 
 # Streamlit app
-st.title("CRUD Operations with MySQL")
+st.title("CRUD++ Operations with MySQL")
 # CRUD Operations
-option = st.sidebar.selectbox("Select an operation", ("Create Table","Delete Table","Create","Read","Update","Delete"))
+option = st.sidebar.selectbox("Select an operation", ("Create Table","Delete Table","Create","Read","Complex Search","Update","Delete"))
 
 if option == "Create":
     st.subheader("Create a Record:")
@@ -98,6 +98,55 @@ elif option == "Delete Table":
         curs.execute(drop_query)
         db.commit()
         st.success("Table deleted!!")
+
+elif option == "Complex Search":
+    option = st.selectbox("Search for a record by:", ("Name","Email"))
+    if option == "Name":
+        tab1, tab2, tab3 = st.tabs(["Starting Substring","Ending Substring","Containing Substring"])
+        with tab1:
+            search_query = "select * from users where name like %s"
+            inp1 = st.text_input("Enter String:", key="1")
+
+            if st.button("Search", key="11"):
+                val = (inp1+"%",)
+                curs.execute(search_query, val)
+                records = curs.fetchall()
+                for i in records:
+                    st.write(i[0],":\t",i[1],":\t",i[2])
+        
+        with tab2:
+            search_query = "select * from users where name like %s"
+            inp2 = st.text_input("Enter String:", key="2")
+
+            if st.button("Search", key="22"):
+                val = ("%"+inp2,)
+                curs.execute(search_query, val)
+                records = curs.fetchall()
+                for i in records:
+                    st.write(i[0],":\t",i[1],":\t",i[2])
+        
+        with tab3:
+            search_query = "select * from users where name like %s"
+            inp3 = st.text_input("Enter String:", key="3")
+
+            if st.button("Search", key="33"):
+                val = ("%"+inp3+"%",)
+                curs.execute(search_query, val)
+                records = curs.fetchall()
+                for i in records:
+                    st.write(i[0],":\t",i[1],":\t",i[2])
+    
+    elif option == "Email":
+        st.subheader("Containing Substring")
+        search_query = "select * from users where email like %s"
+        inp_e = st.text_input("Enter String:", key="4")
+
+        if st.button("Search", key="44"):
+            val = ("%"+inp_e+"%",)
+            curs.execute(search_query, val)
+            records = curs.fetchall()
+            for i in records:
+                st.write(i[0],":\t",i[1],":\t",i[2])
 
 curs.close()
 db.close()
